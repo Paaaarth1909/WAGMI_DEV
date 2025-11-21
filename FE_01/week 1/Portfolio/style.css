@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        
+
 :root {
-    --primary-color: #3b82f6;
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
+    /* Slightly deeper blue for a more professional feel */
+    --primary-color: #2563eb; /* Blue-600 */
+    --bg-color: #0c0f1a; /* Darker slate/navy */
+    --text-color: #e2e8f0; /* Slate-200 */
     --accent-color: #1e293b;
 }
 
@@ -14,15 +15,20 @@ body {
 }
 
 .section-padding {
-    padding: 5rem 1rem;
+    padding: 6rem 1.5rem; /* Increased vertical padding for more breathing room */
 }
 
 .project-card {
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    /* Use a custom cubic-bezier for a more organic transition curve */
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease-in-out;
     cursor: pointer;
+    /* Add a subtle base rotation to break symmetry */
+    transform: rotate(0.5deg);
 }
 
 .project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.5), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+    /* Lift higher and rotate the opposite way on hover for a distinct visual response */
+    transform: translateY(-10px) rotate(-1deg);
+    /* Stronger, more colorful shadow on hover */
+    box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.6), 0 6px 10px -3px rgba(37, 99, 235, 0.3);
 }
