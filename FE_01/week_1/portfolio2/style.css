@@ -7,7 +7,7 @@ body {
 
 header {
     background: #111;
-    padding: 20px;
+    padding: 18px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,17 +24,17 @@ nav a {
     min-height: 80vh;
     max-width: 900px;
     margin: auto;
-    padding: 50px 20px;
+    padding: 45px 20px;
 }
 
-h2 {
+h1, h2 {
     margin-bottom: 15px;
 }
 
 .skill-box {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 }
 
 .skill-box div {
@@ -46,8 +46,8 @@ h2 {
 
 .project-grid {
     display: grid;
-    gap: 18px;
     grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
 }
 
 .project-item {
@@ -73,6 +73,8 @@ footer {
     text-align: center;
     padding: 20px;
 }
+
+/* Responsive */
 @media(max-width: 720px) {
     header {
         flex-direction: column;
