@@ -73,3 +73,27 @@ footer {
     text-align: center;
     padding: 20px;
 }
+@media(max-width: 720px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav a {
+        margin: 8px;
+        display: inline-block;
+    }
+
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .block {
+        padding: 25px 18px;
+        min-height: 60vh;
+    }
+
+    .skill-box {
+        justify-content: center;
+    }
+}
