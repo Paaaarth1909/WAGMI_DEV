@@ -63,6 +63,7 @@ function load(){
 
     opts.forEach((b,idx)=>{
         b.className = "opt"
+        b.style.display = "block"
         b.textContent = cur.a[idx]
         b.onclick = ()=> choose(idx)
     })
@@ -70,9 +71,14 @@ function load(){
     timerId = setInterval(()=>{
         time--
         updateTimer()
+
+        if(time === 3){
+            tEl.classList.add("danger")
+        }
+
         if(time === 0){
             clearInterval(timerId)
-            autoNext()
+            timeoutSkip()
         }
     },1000)
 }
@@ -83,8 +89,9 @@ function updateTimer(){
 
 function choose(idx){
     clearInterval(timerId)
-    let ans = quiz[i].c
+    tEl.classList.remove("danger")
 
+    let ans = quiz[i].c
     opts.forEach(b => b.onclick = null)
 
     if(idx === ans){
@@ -98,10 +105,7 @@ function choose(idx){
     setTimeout(next, 900)
 }
 
-function autoNext(){
-    opts[quiz[i].c].classList.add("correct")
-    setTimeout(next, 900)
-}
+
 
 function next(){
     i++
@@ -118,4 +122,15 @@ function end(){
     opts.forEach(b => b.style.display = "none")
     fill.style.width = "100%"
     tEl.textContent = ""
+}
+function timeoutSkip(){
+    let card = document.querySelector(".card")
+
+    card.classList.add("timeout")
+    tEl.classList.remove("danger")
+
+    setTimeout(()=>{
+        card.classList.remove("timeout")
+        next()
+    },500)
 }
