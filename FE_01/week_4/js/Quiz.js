@@ -1,136 +1,142 @@
-let quiz = [
+let questions = [
     {
-        q: "What does HTML primarily define?",
-        a: ["Logic", "Structure", "Styling", "Database"],
-        c: 1
+        q: "What does HTML mainly define?",
+        o: ["Logic","Structure","Styling","Database"],
+        a: 1
     },
     {
-        q: "Which CSS layout is best for two-dimensional layouts?",
-        a: ["Flexbox", "Float", "Grid", "Inline"],
-        c: 2
+        q: "Best layout for 2D design?",
+        o: ["Flexbox","Float","Grid","Inline"],
+        a: 2
     },
     {
-        q: "Which keyword prevents variable reassignment?",
-        a: ["var", "let", "static", "const"],
-        c: 3
+        q: "Which keyword blocks reassignment?",
+        o: ["var","let","static","const"],
+        a: 3
     },
     {
-        q: "What does event bubbling mean?",
-        a: [
-            "Child events go to parent",
-            "Parent events go to child",
-            "Events stop automatically",
-            "JS crashes"
+        q: "Event bubbling means?",
+        o: [
+            "Child to parent",
+            "Parent to child",
+            "Stops automatically",
+            "JS crash"
         ],
-        c: 0
+        a: 0
     },
     {
-        q: "Which method converts JSON string to object?",
-        a: ["JSON.stringify()", "JSON.parse()", "toObject()", "parseInt()"],
-        c: 1
+        q: "JSON.parse() does what?",
+        o: [
+            "Object to string",
+            "String to object",
+            "Clone data",
+            "Encrypt"
+        ],
+        a: 1
     },
     {
-        q: "Which is NOT a valid HTTP method?",
-        a: ["GET", "POST", "FETCH", "DELETE"],
-        c: 2
+        q: "Which is NOT an HTTP method?",
+        o: ["GET","POST","FETCH","DELETE"],
+        a: 2
     }
 ]
 
-let i = 0
-let score = 0
-let time = 15
-let timerId
+let currentIndex = 0
+let remainingTime = 15
+let totalScore = 0
+let timerRef
 
-let qEl = document.getElementById("question")
-let opts = document.querySelectorAll(".opt")
-let tEl = document.getElementById("timer")
-let fill = document.getElementById("fill")
-let qc = document.getElementById("qcount")
-let res = document.getElementById("result")
+let qText = document.getElementById("questionText")
+let options = document.querySelectorAll(".choice")
+let timerLabel = document.getElementById("timeLeft")
+let progressLabel = document.getElementById("progress")
+let bar = document.getElementById("loaderFill")
+let feedback = document.getElementById("feedback")
+let card = document.querySelector(".quiz-card")
 
-load()
+render()
 
-function load(){
-    clearInterval(timerId)
-    time = 15
+function render(){
+    clearInterval(timerRef)
+    remainingTime = 15
     updateTimer()
 
-    let cur = quiz[i]
-    qEl.textContent = cur.q
-    qc.textContent = `${i+1} / ${quiz.length}`
-    fill.style.width = (i / quiz.length) * 100 + "%"
-    res.textContent = ""
+    let item = questions[currentIndex]
+    qText.textContent = item.q
+    progressLabel.textContent = `${currentIndex+1} / ${questions.length}`
+    bar.style.width = (currentIndex / questions.length) * 100 + "%"
+    feedback.textContent = ""
 
-    opts.forEach((b,idx)=>{
-        b.className = "opt"
-        b.style.display = "block"
-        b.textContent = cur.a[idx]
-        b.onclick = ()=> choose(idx)
+    options.forEach((btn,i)=>{
+        btn.className = "choice"
+        btn.style.display = "block"
+        btn.textContent = item.o[i]
+        btn.onclick = ()=> handleAnswer(i)
     })
 
-    timerId = setInterval(()=>{
-        time--
+    timerRef = setInterval(()=>{
+        remainingTime--
         updateTimer()
 
-        if(time === 3){
-            tEl.classList.add("danger")
+        if(remainingTime === 3){
+            timerLabel.classList.add("danger")
         }
 
-        if(time === 0){
-            clearInterval(timerId)
-            timeoutSkip()
+        if(remainingTime === 0){
+            clearInterval(timerRef)
+            skipQuestion()
         }
     },1000)
 }
 
 function updateTimer(){
-    tEl.textContent = `⏱ ${time}s`
+    timerLabel.textContent = `⏱ ${remainingTime}s`
 }
 
-function choose(idx){
-    clearInterval(timerId)
-    tEl.classList.remove("danger")
+function handleAnswer(index){
+    clearInterval(timerRef)
+    timerLabel.classList.remove("danger")
 
-    let ans = quiz[i].c
-    opts.forEach(b => b.onclick = null)
+    let correctIndex = questions[currentIndex].a
+    options.forEach(b => b.onclick = null)
 
-    if(idx === ans){
-        opts[idx].classList.add("correct")
-        score++
+    if(index === correctIndex){
+        options[index].classList.add("correct")
+        totalScore++
+        feedback.textContent = "Correct"
     } else {
-        opts[idx].classList.add("wrong")
-        opts[ans].classList.add("correct")
+        options[index].classList.add("wrong")
+        options[correctIndex].classList.add("correct")
+        feedback.textContent = "Wrong"
     }
 
-    setTimeout(next, 900)
+    setTimeout(nextStep, 900)
 }
 
-
-
-function next(){
-    i++
-    if(i < quiz.length){
-        load()
-    } else {
-        end()
-    }
-}
-
-function end(){
-    qEl.textContent = "Quiz Completed"
-    res.textContent = `Your Score: ${score} / ${quiz.length}`
-    opts.forEach(b => b.style.display = "none")
-    fill.style.width = "100%"
-    tEl.textContent = ""
-}
-function timeoutSkip(){
-    let card = document.querySelector(".card")
-
+function skipQuestion(){
     card.classList.add("timeout")
-    tEl.classList.remove("danger")
+    timerLabel.classList.remove("danger")
+    feedback.textContent = "Time up"
 
     setTimeout(()=>{
         card.classList.remove("timeout")
-        next()
+        nextStep()
     },500)
+}
+
+function nextStep(){
+    currentIndex++
+    if(currentIndex < questions.length){
+        render()
+    } else {
+        finish()
+    }
+}
+
+function finish(){
+    qText.textContent = "Quiz Completed"
+    feedback.textContent = `Score: ${totalScore} / ${questions.length}`
+    options.forEach(b => b.style.display = "none")
+    bar.style.width = "100%"
+    timerLabel.textContent = ""
 }
