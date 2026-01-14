@@ -1,44 +1,33 @@
-const fs = require("fs");
+const fs = require("fs")
 
-// Read employees.json file
-fs.readFile("employees.json", "utf-8", (err, data) => {
+fs.readFile("employees.json", "utf-8", (err, raw) => {
   if (err) {
-    console.log("Error reading file:", err);
-    return;
+    console.log("file error", err)
+    return
   }
 
-  const employees = JSON.parse(data);
+  let employees = JSON.parse(raw)
 
-  // 1️⃣ Sort employees by salary (descending)
-  const sortedEmployees = [...employees].sort(
-    (a, b) => b.salary - a.salary
-  );
+  let sorted = [...employees].sort((x, y) => y.salary - x.salary)
 
-  // 2️⃣ Filter employees with >= 3 years experience
-  const experiencedEmployees = employees.filter(
-    emp => emp.experience >= 3
-  );
+  let experienced = employees.filter(e => e.experience >= 3)
 
-  // 3️⃣ Create summary list with bonus
-  const summaryList = experiencedEmployees.map(emp => ({
-    name: emp.name,
-    department: emp.department,
-    bonus: emp.salary * 0.10 * emp.experience
-  }));
+  let summary = experienced.map(e => {
+    return {
+      name: e.name,
+      department: e.department,
+      bonus: e.salary * 0.1 * e.experience
+    }
+  })
 
-  // 4️⃣ Total salary expenditure
-  const totalSalary = experiencedEmployees.reduce(
-    (sum, emp) => sum + emp.salary,
-    0
-  );
+  let total = experienced.reduce((s, e) => s + e.salary, 0)
 
-  // 🔹 Display Output
-  console.log("\n🔹 Sorted Employees (High → Low Salary):");
-  console.table(sortedEmployees);
+  console.log("\nSorted Employees")
+  console.table(sorted)
 
-  console.log("\n🔹 Summary List (Experienced Employees):");
-  console.table(summaryList);
+  console.log("\nExperienced Employees Summary")
+  console.table(summary)
 
-  console.log("\n🔹 Total Salary Expenditure:");
-  console.log(`₹${totalSalary}`);
-});
+  console.log("\nTotal Salary Expenditure")
+  console.log("₹" + total)
+})
